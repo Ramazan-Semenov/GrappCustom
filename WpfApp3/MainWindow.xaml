@@ -38,13 +38,19 @@
             </Setter>
         </Style>
 
-        <!-- TreeViewItem -->
-        <Style x:Key="{x:Type TreeViewItem}" TargetType="{x:Type TreeViewItem}">
+        <!-- TreeViewItem x:Key="{x:Type TreeViewItem}"  -->
+        <Style x:Key="Tr" TargetType="{x:Type TreeViewItem}">
             <Setter Property="Background" Value="Transparent"/>
             <Setter Property="Padding"  Value="20 10 0 0"/>
+
+            <Setter Property="HorizontalContentAlignment" Value="Left" />
+            <Setter Property="VerticalContentAlignment" Value="Top" />
+
+            <Setter Property="IsExpanded" Value="True"></Setter>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type TreeViewItem}">
+                        
                         <Grid>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition MinWidth="19" Width="Auto"/>
@@ -58,18 +64,21 @@
 
                             <!-- Connecting Lines -->
                             <Rectangle x:Name="HorLn" Margin="0,1,-100,0"  Height="1" Width="50" Stroke="Gray"  Fill="Transparent" />
-                            <Rectangle x:Name="VerLn" Width="1"  Stroke="Gray" Margin="50,-3,0,0" Grid.RowSpan="2" Fill="Transparent" />
-                            <ToggleButton Margin="50,0,0,0" x:Name="Expander" Style="{StaticResource ExpandCollapseToggleStyle}" IsChecked="{Binding Path=IsExpanded, RelativeSource={RelativeSource TemplatedParent}}" ClickMode="Press"/>
+                            <Rectangle x:Name="VerLn" Width="1"  Stroke="Gray" Margin="50,0,0,0" Grid.RowSpan="2" Fill="Transparent" />
+                            <!--<Rectangle  Width="1"  Stroke="Gray" Margin="50,10,0,79" Grid.RowSpan="2" Fill="Transparent" />-->
+
+                            <ToggleButton  Margin="50,0,0,0" x:Name="Expander" Style="{StaticResource ExpandCollapseToggleStyle}" IsChecked="{Binding Path=IsExpanded, RelativeSource={RelativeSource TemplatedParent}}" ClickMode="Press"/>
                             <Border  Name="Bd" Grid.Column="1" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Padding="{TemplateBinding Padding}" SnapsToDevicePixels="True">
                                 <ContentPresenter x:Name="PART_Header" ContentSource="Header" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" MinWidth="20"/>
                             </Border>
+                            
                             <ItemsPresenter x:Name="ItemsHost" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2"/>
                         </Grid>
                         <ControlTemplate.Triggers>
 
                             <!-- This trigger changes the connecting lines if the item is the last in the list -->
                             <DataTrigger Binding="{Binding RelativeSource={RelativeSource Self}, Converter={StaticResource LineConverter}}" Value="true">
-                                <Setter TargetName="VerLn" Property="Height" Value="35"/>
+                                <Setter TargetName="VerLn" Property="Height" Value="80"/>
                                 <Setter TargetName="VerLn" Property="VerticalAlignment" Value="Top"/>
                             </DataTrigger>
                             <Trigger Property="IsExpanded" Value="false">
@@ -96,17 +105,7 @@
                                 <!--<Setter TargetName="Bd" Property="Background" Value="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}"/>-->
                                 <!--<Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.HighlightTextBrushKey}}"/>-->
                             </Trigger>
-                            <!--<MultiTrigger>
-                                <MultiTrigger.Conditions>
-                                    <Condition Property="IsSelected" Value="true"/>
-                                    <Condition Property="IsSelectionActive" Value="false"/>
-                                </MultiTrigger.Conditions>
-                                <Setter TargetName="Bd" Property="Background" Value="Transparent"/>
-                                <Setter Property="Foreground" Value="Black"/>
-                            </MultiTrigger>-->
-                            <!--<Trigger Property="IsEnabled" Value="false">
-                                <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.ControlDarkBrush}}"/>
-                            </Trigger>-->
+                          
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
                 </Setter.Value>
@@ -125,30 +124,112 @@
             </Style.Setters>
         </Style>
     </Window.Resources>
-    <Grid>
+    <Grid><!--ItemsSource="{Binding node.Child}"--> 
+        <StackPanel>
+           
+        <Button Content="dssss"></Button>
+            <Rectangle Fill="Black" Height="auto" Width="1"></Rectangle>
+            <TreeView ItemContainerStyle="{Binding Source={StaticResource Tr}}" BorderThickness="0" x:Name="ff"   >
+                <!--<TreeView.ItemContainerStyle>
+                    <Style TargetType="{x:Type TreeViewItem}">
+                        <Setter Property="HorizontalContentAlignment" Value="Left"/>
+                        <Setter Property="VerticalContentAlignment" Value="Center"/>
+                    </Style>
+                </TreeView.ItemContainerStyle>-->
+                <TreeView.Resources>
+                   
+                    <CollectionViewSource x:Key="child" Source="{Binding node.Child}"/>
+                    <HierarchicalDataTemplate DataType="{x:Type local:Node}" ItemsSource="{Binding Child}">
+                        <Border Background="White" MinWidth="100" Width="auto" Height="150"  CornerRadius="10" BorderBrush="Black" BorderThickness="0.5">
 
-        <TreeView BorderThickness="0" x:Name="ff"   >
+                            <Grid  Background="Transparent" HorizontalAlignment="Center" VerticalAlignment="Center"  >
+                                <Grid>
+                                    <Grid.LayoutTransform>
+                                        <RotateTransform Angle="-90"></RotateTransform>
+
+                                    </Grid.LayoutTransform>
+                                    <StackPanel>
+                                        <TextBlock TextWrapping="Wrap" Text="{Binding level.id}"/>
+                                    </StackPanel>
+
+                                </Grid>
+                            </Grid>
+                        </Border>
+                    </HierarchicalDataTemplate>
+                </TreeView.Resources>
+                <TreeView.ItemsSource >
+                    
+                    <CompositeCollection >
+                        
+                        <Border Background="White" MinWidth="100" Width="auto" Height="150"  CornerRadius="10" BorderBrush="Black" BorderThickness="0.5">
+
+                            <Grid  Background="Transparent" HorizontalAlignment="Center" VerticalAlignment="Center"  >
+                                <Grid>
+                                    <Grid.LayoutTransform>
+                                        <RotateTransform Angle="-90"></RotateTransform>
+
+                                    </Grid.LayoutTransform>
+                                    <StackPanel>
+                                        <TextBlock TextWrapping="Wrap" Text="ert"/>
+                                    </StackPanel>
+
+                                </Grid>
+                            </Grid>
+                        </Border>
+                       
+
+                        <CollectionContainer Collection="{Binding Source={StaticResource child}}">
+                            
+                            
+                        </CollectionContainer>
+                    </CompositeCollection>
+                </TreeView.ItemsSource>
+                <!--<TreeView.Resources>
+                   
+                    <HierarchicalDataTemplate DataType="{x:Type local:Node}" ItemsSource="{Binding Child}">
+                        <Border Background="White" MinWidth="100" Width="auto" Height="150"  CornerRadius="10" BorderBrush="Black" BorderThickness="0.5">
+
+                            <Grid  Background="Transparent"   VerticalAlignment="Center" HorizontalAlignment="Center"   >
+                                <Grid>
+                                    <Grid.LayoutTransform>
+                                        <RotateTransform Angle="-90"></RotateTransform>
+
+                                    </Grid.LayoutTransform>
+                                    <StackPanel>
+                                        <TextBlock TextWrapping="Wrap" Text="{Binding level.id}"/>
+                                    </StackPanel>
+
+                                </Grid>
+                            </Grid>
+                        </Border>
+                    </HierarchicalDataTemplate>
+                </TreeView.Resources>-->
             <TreeView.LayoutTransform>
                 <RotateTransform Angle="90"/>
             </TreeView.LayoutTransform>
-            <TreeView.ItemTemplate>
-                <HierarchicalDataTemplate ItemsSource="{Binding Path=Child}">
-                    <Border Background="White" Width="50" Height="50"  CornerRadius="10" BorderBrush="Black" BorderThickness="0.5">
+                <!--<TreeView.ItemTemplate>
+                                  
+                    <HierarchicalDataTemplate ItemsSource="{Binding Child}">
+                    <Border Background="White" MinWidth="100" Width="auto" Height="150"  CornerRadius="10" BorderBrush="Black" BorderThickness="0.5">
 
-                        <Button BorderThickness="0"  Width="50" Height="50"  Background="Transparent" FontSize="18"  VerticalAlignment="Center" HorizontalAlignment="Center"   >
-                            <TextBlock TextWrapping="Wrap" Text="{Binding Name}">
-                                <TextBlock.LayoutTransform>
-                                    <RotateTransform Angle="-90"></RotateTransform>
-                                </TextBlock.LayoutTransform>
-                            </TextBlock>
+                            <Grid  Background="Transparent"   VerticalAlignment="Center" HorizontalAlignment="Center"   >
+                                <Grid>
+                                    <Grid.LayoutTransform>
+                                        <RotateTransform Angle="-90"></RotateTransform>
 
-                        </Button>
+                                    </Grid.LayoutTransform>
+                                    <StackPanel>
+                                        <TextBlock TextWrapping="Wrap" Text="{Binding level.id}"/>
+                                    </StackPanel>
 
-                    </Border>
+                                </Grid>
+                            </Grid>
+                        </Border>
                 </HierarchicalDataTemplate>
-            </TreeView.ItemTemplate>
+                    
+            </TreeView.ItemTemplate>-->
         </TreeView>
 
-
+        </StackPanel>
     </Grid>
 </Window>

@@ -23,30 +23,35 @@ namespace WpfApp3
     /// </summary>
     public partial class MainWindow : Window
     {
-        public MainWindow()
+		public Node node { get; set; }
+
+		public MainWindow()
         {
             InitializeComponent();
-			tas n0 = new tas { id = 1 };
-			tas n1 = new tas { id = 2 };
-			tas n2 = new tas { id = 3 };
-			tas n3 = new tas { id = 4 };
-			tas n9 = new tas { id = 9 };
-			tas n4 = new tas { id = 5 };
-			tas n10 = new tas { id = 10 };
+			tas n0 = new tas { id = 1, name="Проект 1" };
+			tas n1 = new tas { id = 2, name = "Проект 2" };
+			tas n2 = new tas { id = 3, name = "Проект 3" };
+			tas n3 = new tas { id = 4, name = "Проект " };
+			tas n9 = new tas { id = 9, name = "Проект 1" };
+			tas n4 = new tas { id = 5, name = "Проект 1" };
+			tas n10 = new tas { id = 10, name = "Проект 1" };
 			List<tas> tas = new List<tas>() { n0, n1, n2, n3, n4, n9, n10 };
 			List<relaCh> ch = new List<relaCh>();
-			ch.Add(new relaCh { id_Par = 1, id_Child = 2 });
+            ch.Add(new relaCh { id_Par = 1, id_Child = 2 });
             ch.Add(new relaCh { id_Par = 1, id_Child = 4 });
             ch.Add(new relaCh { id_Par = 1, id_Child = 5 });
             ch.Add(new relaCh { id_Par = 2, id_Child = 3 });
+            ch.Add(new relaCh { id_Par = 2, id_Child = 10 });
+
             ch.Add(new relaCh { id_Par = 3, id_Child = 5 });
             ch.Add(new relaCh { id_Par = 5, id_Child = 9 });
-			ch.Add(new relaCh { id_Par = 4, id_Child = 9 });
-			ch.Add(new relaCh { id_Par = 4, id_Child = 10 });
+            ch.Add(new relaCh { id_Par = 4, id_Child = 9 });
+            ch.Add(new relaCh { id_Par = 4, id_Child = 10 });
+            ch.Add(new relaCh { id_Par = 2, id_Child = 9 });
 
-			//ch.Add(new relaCh { id_Par = 10, id_Child = 9 });
+            ch.Add(new relaCh { id_Par = 10, id_Child = 9 });
 
-			Node node = new Node() { level = new tas { id = 1 } };
+            node = new Node() { level = new tas { id = 1 } };
 			//Node node1=new Node { level=new tas { } }
 			//Node node = new Node()
 			//{
@@ -56,12 +61,11 @@ namespace WpfApp3
 			//};
 			addElem(node, ch, tas);
 			rec(node);
-			ff.DataContext = node;
+			//ff.DataContext = node;
 
-			ff.ItemsSource = node.Child;
+			//ff.ItemsSource = node.Child;
 			XmlSerializer xsSubmit = new XmlSerializer(typeof(Node));
 			var xml = "";
-
 			using (var sww = new StringWriter())
 			{
 				using (XmlWriter writer = XmlWriter.Create(sww))
@@ -71,7 +75,8 @@ namespace WpfApp3
 					Console.WriteLine(xml);
 				}
 			}
-
+			DataContext = this;
+			System.Diagnostics.PresentationTraceSources.DataBindingSource.Switch.Level = System.Diagnostics.SourceLevels.Critical;
 		}
 
 
@@ -94,7 +99,7 @@ namespace WpfApp3
 					{
 						// gg.Add(new Node() {  level=item});
 						node.Child.Add(new Node() { level = item, Name = item.id.ToString() });
-						Console.WriteLine(item.id);
+						Console.WriteLine(item.name);
 
 					}
 				}
@@ -125,7 +130,7 @@ namespace WpfApp3
 	[XmlRoot(ElementName = "Node")]
 	public class Node
 	{
-		public tas level;
+		public tas level { get; set; }
 		[XmlAttribute(AttributeName = "Name")]
 		public string Name { get; set; }
 		[XmlElement(ElementName = "Children")]
