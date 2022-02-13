@@ -28,14 +28,14 @@ namespace WpfApp3
 		public MainWindow()
         {
             InitializeComponent();
-			tas n0 = new tas { id = 1, name="Проект 1" };
-			tas n1 = new tas { id = 2, name = "Проект 2" };
-			tas n2 = new tas { id = 3, name = "Проект 3" };
-			tas n3 = new tas { id = 4, name = "Проект " };
-			tas n9 = new tas { id = 9, name = "Проект 1" };
-			tas n4 = new tas { id = 5, name = "Проект 1" };
-			tas n10 = new tas { id = 10, name = "Проект 1" };
-			List<tas> tas = new List<tas>() { n0, n1, n2, n3, n4, n9, n10 };
+			Software_Registry n0 = new Software_Registry { id = 1, product_name="Проект 1", owner= "Семенов" };
+			Software_Registry n1 = new Software_Registry { id = 2, product_name = "Проект 2", owner = "Кузнецова" };
+			Software_Registry n2 = new Software_Registry { id = 3, product_name = "Проект 3", owner = "Степанов" };
+			Software_Registry n3 = new Software_Registry { id = 4, product_name = "Проект 4", owner = "Выдрин" };
+			Software_Registry n9 = new Software_Registry { id = 9, product_name = "Проект 9", owner = "Емельянова" };
+			Software_Registry n4 = new Software_Registry { id = 5, product_name = "Проект 5", owner = "Калиновский" };
+			Software_Registry n10 = new Software_Registry { id = 10, product_name = "Проект 10", owner = "Калинина" };
+			List<Software_Registry> tas = new List<Software_Registry>() { n0, n1, n2, n3, n4, n9, n10 };
 			List<relaCh> ch = new List<relaCh>();
             ch.Add(new relaCh { id_Par = 1, id_Child = 2 });
             ch.Add(new relaCh { id_Par = 1, id_Child = 4 });
@@ -51,14 +51,8 @@ namespace WpfApp3
 
             ch.Add(new relaCh { id_Par = 10, id_Child = 9 });
 
-            node = new Node() { level = new tas { id = 1 } };
-			//Node node1=new Node { level=new tas { } }
-			//Node node = new Node()
-			//{
-			//    level = new tas { id = 1 },
-			//    Child = new List<Node> { new Node { level = new tas { id = 2 },
-			//        Child=new List<Node> { new Node { level=new tas { id=9 } } } }, new Node { level=new tas { id=3 }, Child=new List<Node>() { new Node {  level=new tas {id =4 } } } } }
-			//};
+            node = new Node() {Name="Главный проект", level = new Software_Registry { id = 1 } };
+
 			addElem(node, ch, tas);
 			rec(node);
 			//ff.DataContext = node;
@@ -80,7 +74,7 @@ namespace WpfApp3
 		}
 
 
-		static void addElem(Node node, List<relaCh> ches, List<tas> tass)
+		static void addElem(Node node, List<relaCh> ches, List<Software_Registry> tass)
 		{
 			var gg = new List<Node>();
 			var nn = new List<int>();
@@ -99,7 +93,7 @@ namespace WpfApp3
 					{
 						// gg.Add(new Node() {  level=item});
 						node.Child.Add(new Node() { level = item, Name = item.id.ToString() });
-						Console.WriteLine(item.name);
+						Console.WriteLine(item.product_name);
 
 					}
 				}
@@ -126,11 +120,16 @@ namespace WpfApp3
 
 			}
 		}
-	}
-	[XmlRoot(ElementName = "Node")]
+
+        private void MenuItem_Click(object sender, RoutedEventArgs e)
+        {
+			MessageBox.Show((sender as MenuItem).CommandParameter.ToString());
+        }
+    }
+    [XmlRoot(ElementName = "Node")]
 	public class Node
 	{
-		public tas level { get; set; }
+		public Software_Registry level { get; set; }
 		[XmlAttribute(AttributeName = "Name")]
 		public string Name { get; set; }
 		[XmlElement(ElementName = "Children")]
@@ -138,24 +137,105 @@ namespace WpfApp3
 	}
 	public class rela
 	{
-		public tas Parent { get; set; }
+		public Software_Registry Parent { get; set; }
 		// public int id_Par { get; set; }
-		public tas Children { get; set; }
+		public Software_Registry Children { get; set; }
 		//   public int id_Child { get; set; }
 
 	}
-	public class tas
-	{
-		public int id { get; set; }
-		public string name { get; set; }
+	//public class tas
+	//{
+	//	public int id { get; set; }
+	//	public string name { get; set; }
 
-	}
+	//}
 	public class relaCh
 	{
 		//public tas Parent { get; set; }
 		public int id_Par { get; set; }
 		//public tas Children { get; set; }
 		public int id_Child { get; set; }
+
+	}
+	public class NewTaskBook
+	{
+		public int Id { get; set; }
+		public DateTime? DateStart { get; set; }
+		public DateTime? DateEnd { get; set; }
+		public string TypeTask { get; set; }
+		public string NameTask { get; set; }
+		public string CategoryTask { get; set; }
+		public string AffectedProduct { get; set; }
+		public string DescriptionTask { get; set; }
+		public string Excecuter { get; set; }
+		public DateTime? ActualCompletionDate { get; set; }
+		public int LaborCosts { get; set; }
+		public int ActualLaborCosts { get; set; }
+		public string Comment { get; set; }
+
+	}
+	public class Software_Registry
+	{
+		/// <summary>
+		/// Id 
+		/// </summary>
+		public int id { get; set; }
+		/// <summary>
+		/// Приоритет (Высокий, средний, низкий)
+		/// </summary>
+		public string priority { get; set; }
+		/// <summary>
+		/// Вид продукции (ВНутренний, внешний)
+		/// </summary>
+		public string product_type { get; set; }
+		/// <summary>
+		/// Имя продукта
+		/// </summary>
+		public string product_name { get; set; }
+		/// <summary>
+		/// Краткое описание
+		/// </summary>
+		public string short_description { get; set; }
+		/// <summary>
+		/// тип продукта(с#, vba, sql...)
+		/// </summary>
+		public string type_of_product { get; set; }
+		/// <summary>
+		/// Заказчик
+		/// </summary>
+		public string customer { get; set; }
+		/// <summary>
+		/// Владелец
+		/// </summary>
+		public string owner { get; set; }
+		/// <summary>
+		/// главный разработчик 
+		/// </summary>
+		public string main_developer { get; set; }
+		/// <summary>
+		/// количество пользователей
+		/// </summary>
+		public string number_of_users { get; set; }
+		/// <summary>
+		/// этап
+		/// </summary>
+		public string stage { get; set; }
+		/// <summary>
+		/// сопровождение
+		/// </summary>
+		public string maintenance { get; set; }
+		/// <summary>
+		/// ссылка на проект
+		/// </summary>
+		public string link_repository { get; set; }
+		/// <summary>
+		/// ссылка на описание 
+		/// </summary>
+		public string link_description { get; set; }
+		/// <summary>
+		/// комментарии
+		/// </summary>
+		public string comments { get; set; }
 
 	}
 	//class TreeViewLineConverter : IValueConverter

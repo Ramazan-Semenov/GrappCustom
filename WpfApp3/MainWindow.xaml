@@ -124,67 +124,91 @@
             </Style.Setters>
         </Style>
     </Window.Resources>
-    <Grid><!--ItemsSource="{Binding node.Child}"--> 
-        <StackPanel>
-           
-        <Button Content="dssss"></Button>
-            <Rectangle Fill="Black" Height="auto" Width="1"></Rectangle>
-            <TreeView ItemContainerStyle="{Binding Source={StaticResource Tr}}" BorderThickness="0" x:Name="ff"   >
-                <!--<TreeView.ItemContainerStyle>
+    <Grid><!--ItemsSource="{Binding node.Child}"-->
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <StackPanel  HorizontalAlignment="Right">
+            <Button Grid.Row="0" MinWidth="100" Width="150" Height="150"   Background="Transparent" Content="{Binding node.Name}"></Button>
+
+            <Rectangle Grid.Row="1"  Fill="Black" Height="140" Width="1"></Rectangle>
+
+        </StackPanel>
+          <TreeView Background="Transparent" Margin="0 -59 0 0" Grid.Row="2" ItemContainerStyle="{Binding Source={StaticResource Tr}}" BorderThickness="0" x:Name="ff"   >
+            <!--<TreeView.ItemContainerStyle>
                     <Style TargetType="{x:Type TreeViewItem}">
                         <Setter Property="HorizontalContentAlignment" Value="Left"/>
                         <Setter Property="VerticalContentAlignment" Value="Center"/>
                     </Style>
                 </TreeView.ItemContainerStyle>-->
-                <TreeView.Resources>
-                   
-                    <CollectionViewSource x:Key="child" Source="{Binding node.Child}"/>
-                    <HierarchicalDataTemplate DataType="{x:Type local:Node}" ItemsSource="{Binding Child}">
-                        <Border Background="White" MinWidth="100" Width="auto" Height="150"  CornerRadius="10" BorderBrush="Black" BorderThickness="0.5">
+            <TreeView.Resources>
 
-                            <Grid  Background="Transparent" HorizontalAlignment="Center" VerticalAlignment="Center"  >
-                                <Grid>
-                                    <Grid.LayoutTransform>
-                                        <RotateTransform Angle="-90"></RotateTransform>
+                <CollectionViewSource x:Key="child" Source="{Binding node.Child}"/>
+                <HierarchicalDataTemplate DataType="{x:Type local:Node}" ItemsSource="{Binding Child}">
+                    <Border Background="White" MinWidth="100" Width="auto" Height="150"  CornerRadius="10" BorderBrush="Black" BorderThickness="0.5">
 
-                                    </Grid.LayoutTransform>
-                                    <StackPanel>
-                                        <TextBlock TextWrapping="Wrap" Text="{Binding level.id}"/>
-                                    </StackPanel>
+                        <Grid  Background="Transparent" HorizontalAlignment="Center" VerticalAlignment="Center"  >
+                            <Grid>
+                                <Grid.LayoutTransform>
+                                    <RotateTransform Angle="-90"></RotateTransform>
 
-                                </Grid>
+                                </Grid.LayoutTransform>
+                                <StackPanel>
+                                    <TextBlock  TextWrapping="Wrap" Text="{Binding level.id , StringFormat={}id: {0}}"/>
+                                    <TextBlock TextWrapping="Wrap" Text="{Binding level.product_name}"/>
+                                    <TextBlock TextWrapping="Wrap" Text="{Binding level.owner}"/>
+                                    <TextBlock TextWrapping="Wrap" Text="{Binding level.product_type}"/>
+                                </StackPanel>
+
                             </Grid>
-                        </Border>
-                    </HierarchicalDataTemplate>
-                </TreeView.Resources>
-                <TreeView.ItemsSource >
-                    
-                    <CompositeCollection >
-                        
-                        <Border Background="White" MinWidth="100" Width="auto" Height="150"  CornerRadius="10" BorderBrush="Black" BorderThickness="0.5">
+                        </Grid>
+                        <Border.ContextMenu>
+                            <ContextMenu>
+                                <MenuItem Header="Добавить"></MenuItem>
+                                <MenuItem Header="Изменить"></MenuItem>
+                                <MenuItem Header="Удалить" CommandParameter="{Binding}" Click="MenuItem_Click"  ></MenuItem>
+                            </ContextMenu>
+                        </Border.ContextMenu>
+                    </Border>
+                </HierarchicalDataTemplate>
+            </TreeView.Resources>
+            <TreeView.ItemsSource >
 
-                            <Grid  Background="Transparent" HorizontalAlignment="Center" VerticalAlignment="Center"  >
-                                <Grid>
-                                    <Grid.LayoutTransform>
-                                        <RotateTransform Angle="-90"></RotateTransform>
+                <CompositeCollection >
 
-                                    </Grid.LayoutTransform>
-                                    <StackPanel>
-                                        <TextBlock TextWrapping="Wrap" Text="ert"/>
-                                    </StackPanel>
+                    <Border Background="White" MinWidth="100" Width="auto" Height="150"  CornerRadius="10" BorderBrush="Black" BorderThickness="0.5">
 
-                                </Grid>
+                        <Grid  Background="Transparent" HorizontalAlignment="Center" VerticalAlignment="Center"  >
+                            <Grid>
+                                <Grid.LayoutTransform>
+                                    <RotateTransform Angle="-90"></RotateTransform>
+
+                                </Grid.LayoutTransform>
+                                <StackPanel>
+                                    <TextBlock TextWrapping="Wrap" Text="ert"/>
+                                </StackPanel>
+
                             </Grid>
-                        </Border>
-                       
+                        </Grid>
+                        <Border.ContextMenu>
+                            <ContextMenu>
+                                <MenuItem Header="Добавить"></MenuItem>
+                                <MenuItem Header="Изменить"></MenuItem>
+                                <MenuItem Header="Удалить"></MenuItem>
+                            </ContextMenu>
+                        </Border.ContextMenu>
+                    </Border>
 
-                        <CollectionContainer Collection="{Binding Source={StaticResource child}}">
-                            
-                            
-                        </CollectionContainer>
-                    </CompositeCollection>
-                </TreeView.ItemsSource>
-                <!--<TreeView.Resources>
+
+                    <CollectionContainer Collection="{Binding Source={StaticResource child}}">
+
+
+                    </CollectionContainer>
+                </CompositeCollection>
+            </TreeView.ItemsSource>
+            <!--<TreeView.Resources>
                    
                     <HierarchicalDataTemplate DataType="{x:Type local:Node}" ItemsSource="{Binding Child}">
                         <Border Background="White" MinWidth="100" Width="auto" Height="150"  CornerRadius="10" BorderBrush="Black" BorderThickness="0.5">
@@ -207,7 +231,7 @@
             <TreeView.LayoutTransform>
                 <RotateTransform Angle="90"/>
             </TreeView.LayoutTransform>
-                <!--<TreeView.ItemTemplate>
+            <!--<TreeView.ItemTemplate>
                                   
                     <HierarchicalDataTemplate ItemsSource="{Binding Child}">
                     <Border Background="White" MinWidth="100" Width="auto" Height="150"  CornerRadius="10" BorderBrush="Black" BorderThickness="0.5">
@@ -230,6 +254,5 @@
             </TreeView.ItemTemplate>-->
         </TreeView>
 
-        </StackPanel>
     </Grid>
 </Window>
